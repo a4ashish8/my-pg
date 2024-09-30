@@ -1,68 +1,51 @@
-import React, { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import React from "react";
 import { getAllUsers } from "../services/opertions/user"
-import Error from "./Error"
+const UserList = () => {
+  const data = [
+    { id: 1, name: "John Doe", email: "john@example.com", role: "Admin" },
+    { id: 2, name: "Jane Doe", email: "jane@example.com", role: "Editor" },
+    { id: 3, name: "Sam Smith", email: "sam@example.com", role: "Viewer" },
+  ];
 
-function UserList() {
-  const { loading } = useSelector((state) => state.profile) // Redux loading state
-  const dispatch = useDispatch()
+  const fetchUsers = async () => {
 
-  // Local state for users and error handling
-  const [users, setUsers] = useState([])
-  const [error, setError] = useState(null)
-  const [localLoading, setLocalLoading] = useState(false) // Local loading state
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setLocalLoading(true)  // Set loading to true
-      try {
-        const res = await getAllUsers()
-        if (res.success) {
-          setUsers(res.data)
-        } else {
-          setError("Could not fetch user details.")
-        }
-      } catch (error) {
-        setError("An error occurred while fetching users.")
-        console.log("Could not fetch user details", error)
-      }
-      setLocalLoading(false)  // Set loading to false
+    try {
+      const res = await getAllUsers()
+      console.log(res)
+    } catch (error) {
+      console.log("Could not fetch user details", error)
     }
-
-    fetchUsers()
-  }, [])
-
-  if (loading || localLoading) {
-    return (
-      <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
-        <div className="spinner"></div>
-      </div>
-    )
   }
 
-  if (error) {
-    return <Error message={error} />
-  }
-
+  fetchUsers()
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">All Users</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {users.length > 0 ? (
-          users.map((user) => (
-            <div key={user._id} className="p-4 border rounded shadow-md">
-              <p className="text-lg font-semibold">{`${user.first_name} ${user.last_name}`}</p>
-              <p>Age: {user.age}</p>
-              <p>Sex: {user.sex}</p>
-              <p>Date of Birth: {user.dob}</p>
-            </div>
-          ))
-        ) : (
-          <p>No users available.</p>
-        )}
-      </div>
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white border border-gray-200">
+        <thead>
+          <tr>
+            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Name
+            </th>
+            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Email
+            </th>
+            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Role
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((person) => (
+            <tr key={person.id}>
+              <td className="px-6 py-4 whitespace-nowrap border-b border-gray-200">{person.name}</td>
+              <td className="px-6 py-4 whitespace-nowrap border-b border-gray-200">{person.email}</td>
+              <td className="px-6 py-4 whitespace-nowrap border-b border-gray-200">{person.role}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  )
-}
+  );
+};
 
-export default UserList
+export default UserList;

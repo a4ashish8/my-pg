@@ -13,6 +13,7 @@ export const getAllUsers = async () => {
   let result = []
   try {
     const response = await apiConnector("GET", ALLUSER_API)
+    console.log(response)
     if (!response?.data?.success) {
       throw new Error("Could not fetch user details.")
     }
