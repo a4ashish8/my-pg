@@ -10,7 +10,7 @@ exports.addUser = async (req, res) => {
     // Destructure fields from the request body
     const { first_name, last_name, emailId, password, userType, phoneNo, userStatus, ammount, joiningDate } = req.body
     // Check if All Details are there or not
-
+// console.log(req.body)
     if (!first_name || !last_name || !emailId || !password) {
       return res.status(403).send({
         success: false,
@@ -32,6 +32,8 @@ exports.addUser = async (req, res) => {
     const imageUrl = `https://api.dicebear.com/5.x/initials/svg?seed=${first_name}%20${last_name}`;
 
     // Create the Additional Profile For User
+
+    
     const details = await Details.create({
       first_name,
       last_name,
@@ -66,13 +68,12 @@ exports.addUser = async (req, res) => {
 exports.getAllUser = async (req, res) => {
   try {
     const users = await Admin.find({ userType: { $ne: 'Admin' } }).populate('userDetails');
-    return res.status(500).json({
+    return res.status(200).json({
       success: true,
       users,
       message: "data fetched",
     });
   } catch (error) {
-   
     return res.status(500).json({
       success: false,
       message: "All user api have an issues",
