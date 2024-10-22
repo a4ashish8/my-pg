@@ -1,24 +1,22 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 const Footer = () => {
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'script.js';
-    script.async = true;
-    document.body.appendChild(script);
+    const currentYear = new Date().getFullYear();
 
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  return (
-    <footer className="bg-gray-800 text-white py-4">
-      <div className="container mx-auto text-center">
-        <p>&copy; {new Date().getFullYear()} AdminHub. All rights reserved.</p>
-      </div>
-    </footer>
-  );
+    return (
+        <footer className="bg-white shadow mt-4">
+            <div className="container mx-auto px-4 py-4">
+                <div className="flex justify-between items-center">
+                    <div className="text-sm">
+                        {currentYear} © Minia.
+                    </div>
+                    <div className="hidden sm:block text-sm">
+                        Design & Develop by <a href="#!" className="text-blue-500 underline">Themesbrand</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    );
 };
 
 export default Footer;

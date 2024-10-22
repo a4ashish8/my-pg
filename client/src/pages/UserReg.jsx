@@ -1,8 +1,8 @@
 import React from 'react';
-import Header from '../theme/header'; // Adjust the import path as necessary
-import Footer from '../theme/footer'; // Adjust the import path as necessary
-import Sidebar from '../theme/sidebar'; // Adjust the import path as necessary
-import RegisterForm from './RegisterForm'; // Adjust the import path as necessary
+import Header from '../theme/header'; 
+import Footer from '../theme/footer'; 
+import Sidebar from '../theme/sidebar'; 
+import RegisterForm from './RegisterForm'; 
 
 const RegisterPage = () => {
   return (
