@@ -1,9 +1,8 @@
-import { Box, Typography, useTheme } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { Box, Typography, useTheme, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link as MuiLink } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { getAllUsers } from "../../services/opertions/user";
 
 const TotalUsers = () => {
   const theme = useTheme();
@@ -11,59 +10,39 @@ const TotalUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const columns = [
-    { field: "id", headerName: "ID", flex: 0.5, minWidth: 70 },
-    {
-      field: "username",
-      headerName: "Username",
-      flex: 1,
-      minWidth: 150,
-      cellClassName: "name-column--cell",
-      renderCell: (params) => (
-        <Link
-          to={`/user/${params.row.id}`} // Link to user detail page
-          style={{ textDecoration: 'none', color: colors.greenAccent[300] }}
-        >
-          <Typography>{params.value}</Typography>
-        </Link>
-      ),
-    },
-    { field: "status", headerName: "Status", flex: 0.7, minWidth: 100 },
-    { field: "name", headerName: "Name", flex: 1, minWidth: 150 },
-    { field: "phone", headerName: "Phone Number", flex: 1, minWidth: 120 },
-    { field: "email", headerName: "Email", flex: 1, minWidth: 200 },
-    { field: "address", headerName: "Address", flex: 1, minWidth: 200 },
-    { field: "activationDate", headerName: "Activation Date", flex: 1, minWidth: 150 },
-    { field: "createdOn", headerName: "Created On", flex: 1, minWidth: 150 },
-    { field: "expiryDate", headerName: "Expiry Date", flex: 1, minWidth: 150 },
-    { field: "ipAddress", headerName: "IP Address", flex: 1, minWidth: 150 },
-    { field: "macAddress", headerName: "MAC Address", flex: 1, minWidth: 150 },
-    { field: "package", headerName: "Package ID", flex: 0.8, minWidth: 100 },
-    { field: "uploadSpeed", headerName: "Upload (Mbps)", flex: 0.7, minWidth: 100 },
-    { field: "downloadSpeed", headerName: "Download (Mbps)", flex: 0.7, minWidth: 100 },
-  ];
-  
+  const fetchUsers = async () => {
+    try {
+      const res = await getAllUsers();
+      if (res.length > 0) {
+        const formattedUsers = res.map((user) => ({
+          id: user._id,
+          username: user.userId,
+          status: user.userStatus,
+          name: `${user.userDetails.first_name} ${user.userDetails.last_name}`,
+          phone: user.userDetails.phoneNo,
+          email: user.userDetails.emailId,
+          address: user.userDetails.address || "N/A",
+          activationDate: user.userDetails.activationDate || "N/A",
+          createdOn: user.userDetails.joiningDate || "N/A",
+          expiryDate: user.userDetails.expiryDate || "N/A",
+          ipAddress: user.userDetails.ipAddress || "N/A",
+          macAddress: user.userDetails.macAddress || "N/A",
+          package: user.userDetails.packageId || "N/A",
+          uploadSpeed: user.userDetails.uploadSpeed || "N/A",
+          downloadSpeed: user.userDetails.downloadSpeed || "N/A",
+        }));
+        setUsers(formattedUsers);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log("Could not fetch user details", error);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true); // Set loading to true at the start
-      try {
-        const response = await fetch('http://localhost:3200/totalUsers'); // Adjusted to match your backend port
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setLoading(false); // Set loading to false after fetching
-      }
-    };
-  
     fetchUsers();
   }, []);
-  
- 
-  
- 
 
   return (
     <Box m="20px">
@@ -71,37 +50,36 @@ const TotalUsers = () => {
       {loading ? (
         <Typography>Loading...</Typography>
       ) : (
-        <Box
-          m="40px 0 0 0"
-          height="74vh"
-          sx={{
-            "& .MuiDataGrid-root": {
-              border: "none",
-            },
-            "& .MuiDataGrid-cell": {
-              borderBottom: "none",
-            },
-            "& .name-column--cell": {
-              color: colors.greenAccent[300],
-            },
-            "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: colors.blueAccent[700],
-              borderBottom: "none",
-            },
-            "& .MuiDataGrid-virtualScroller": {
-              backgroundColor: colors.primary[400],
-            },
-            "& .MuiDataGrid-footerContainer": {
-              borderTop: "none",
-              backgroundColor: colors.blueAccent[700],
-            },
-            "& .MuiCheckbox-root": {
-              color: `${colors.greenAccent[200]} !important`,
-            },
-          }}
-        >
-          <DataGrid checkboxSelection rows={users} columns={columns} />
-        </Box>
+        <TableContainer component={Paper} sx={{ marginTop: "40px" }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Username</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Phone</TableCell>
+                <TableCell>Email</TableCell>
+            
+
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>
+                    {user.username}
+                  </TableCell>
+                  <TableCell>{user.status}</TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.phone}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+
+
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
     </Box>
   );

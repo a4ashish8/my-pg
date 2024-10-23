@@ -109,7 +109,7 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Amandeep
+                  Ashish Ranjan
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
                   Admin
@@ -132,7 +132,7 @@ const Sidebar = () => {
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
-             Users
+              Users
             </Typography>
             <Item
               title="Total Users"
@@ -141,107 +141,15 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+
             <Item
-              title="Active Users"
-              to="/activeUsers"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Expired Users"
-              to="/expiredUsers"
-              icon={<SensorOccupiedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-             <Item
-              title="Terminated Users"
-              to="/terminatedUsers"
-              icon={<PersonOffIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-             <Item
-              title="Blocked Users"
-              to="/blockedUsers"
-              icon={<NoAccountsIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-              <Item
               title="Create User"
-              to="/userform"
+              to="/userReg"
               icon={<PersonAddAltIcon />}
               selected={selected}
               setSelected={setSelected}
             />
 
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Packages
-            </Typography>
-          
-            <Item
-              title="Calendar"
-              to="/calendar"
-              icon={<CalendarTodayOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="User Package"
-              to="/userPackage"
-              icon={<PlaylistAddCheckCircleIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-             <Item
-              title="Create Package"
-              to="/userPackage"
-              icon={<PlaylistAddCheckCircleIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Charts
-            </Typography>
-            <Item
-              title="Bar Chart"
-              to="/bar"
-              icon={<BarChartOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Pie Chart"
-              to="/pie"
-              icon={<PieChartOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Line Chart"
-              to="/line"
-              icon={<TimelineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Geography Chart"
-              to="/geography"
-              icon={<MapOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
           </Box>
         </Menu>
       </ProSidebar>

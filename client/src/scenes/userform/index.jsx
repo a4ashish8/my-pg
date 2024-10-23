@@ -32,9 +32,9 @@ const UserForm = () => {
             <Box
               display="grid"
               gap="20px"
-              gridTemplateColumns="repeat(2, minmax(0, 1fr))"
+              gridTemplateColumns="repeat(6, minmax(0, 1fr))"
               sx={{
-                "& > div": { gridColumn: "span 2" },
+                "& > div": { gridColumn: isNonMobile ? "span 3" : "span 6" },
               }}
             >
               {/* Adjusted Fields */}
@@ -175,6 +175,7 @@ const UserForm = () => {
                 variant="filled"
                 type="date"
                 label="Activation Date"
+                InputLabelProps={{ shrink: true }}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.activationDate}
