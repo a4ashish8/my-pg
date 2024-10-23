@@ -18,6 +18,7 @@ import UserForm from "./scenes/userform/index";
 
 
 
+
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
@@ -34,6 +35,8 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/totalUsers" element={<Totalusers />} /> 
               <Route path="/userReg" element={<UserForm/>} />
+              {/* <Route path='/*' element={<Error />} /> */}
+
             </Routes>
           </main>
         </div>
