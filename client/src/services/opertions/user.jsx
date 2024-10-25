@@ -11,7 +11,7 @@ export const regUser = async (userData) => {
     const response = await apiConnector("POST", USERADD_API, userData);
 
     if (!response?.data?.success) {
-      throw new Error(response?.data?.message || "Could not register user.");
+      return response.data; // Return the response data directly
     }
 
     result = response?.data || {};
@@ -20,8 +20,11 @@ export const regUser = async (userData) => {
   } catch (error) {
     console.error("USERADD_API ERROR:", error.message, error);
     toast.error("Failed to register user: " + error.message);
+    return {
+      success: false,
+      message: error.message,
+    };
   }
-
   toast.dismiss(toastId);
   return result;
 };
@@ -31,17 +34,10 @@ export const getAllUsers = async () => {
   let result = [];
   try {
     const response = await apiConnector("GET", ALLUSER_API);
-
-    if (!response?.data?.success) {
-      throw new Error("Could not fetch user details.");
-    }
-
-    result = response?.data?.users || [];
+    result = response?.data || [];
   } catch (error) {
-    console.error("GET_ALL_USERS_API ERROR:", error.message, error);
-    toast.error("Failed to load users: " + error.message);
+    console.error("ALLUSER_API ERROR:", error.message, error);
   }
-
   toast.dismiss(toastId);
   return result;
 };

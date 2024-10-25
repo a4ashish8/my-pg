@@ -6,18 +6,9 @@ import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import PersonOffIcon from '@mui/icons-material/PersonOff';
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
-import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
-import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
-import SensorOccupiedIcon from '@mui/icons-material/SensorOccupied';
-import NoAccountsIcon from '@mui/icons-material/NoAccounts';
+
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -145,6 +136,13 @@ const Sidebar = () => {
             <Item
               title="Create User"
               to="/userReg"
+              icon={<PersonAddAltIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Update User"
+              to="/UpdateUser"
               icon={<PersonAddAltIcon />}
               selected={selected}
               setSelected={setSelected}

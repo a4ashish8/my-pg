@@ -4,61 +4,62 @@ const jwt = require("jsonwebtoken")
 
 exports.loginUser = async (req, res) => {
   try {
-    const { userId, password } = req.body
+    const { userId, password } = req.body;
+    console.log(req.body);
+    false;
     if (!userId || !password) {
       return res.status(400).json({
         success: false,
         message: 'All fields are required',
-      })
+      });
     }
-    const user = await Admin.findOne({ userId }).populate("userDetails")
+
+    const user = await Admin.findOne({ userId }).populate("userDetails");
 
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "User Id not Exist",
-      })
+        message: "User ID does not exist",
+      });
     }
 
-    // Generate JWT token and Compare Password
+    // Compare Password and Generate JWT token if matched
     if (await bcrypt.compare(password, user.password)) {
       const token = jwt.sign(
         { userId: user.userId, userType: user.userType, userStatus: user.userStatus, id: user._id },
         process.env.JWT_SECRET,
-        {
-          expiresIn: "24h",
-        }
-      )
+        { expiresIn: "24h" }
+      );
 
-      // Save token to user document in database
-      user.token = token
-      user.password = undefined
+      // Save token in user document (optional, depending on your needs)
+      user.token = token;
+      await user.save();
+
       // Set cookie for token and return success response
       const options = {
         expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
         httpOnly: true,
-      }
+      };
       res.cookie("token", token, options).status(200).json({
         success: true,
         token,
         user,
-        message: `User Login Success`,
-      })
+        message: "User logged in successfully",
+      });
     } else {
       return res.status(401).json({
         success: false,
-        message: `Password is incorrect`,
-      })
+        message: "Password is incorrect",
+      });
     }
-
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({
       success: false,
-      message: "User Login function have siome issues",
-    })
+      message: "Error occurred during login",
+    });
   }
-}
+};
 
 exports.chngPassword = async (req, res) => {
   try {
