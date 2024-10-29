@@ -5,8 +5,7 @@ const jwt = require("jsonwebtoken")
 exports.loginUser = async (req, res) => {
   try {
     const { userId, password } = req.body;
-    console.log(req.body);
-    false;
+
     if (!userId || !password) {
       return res.status(400).json({
         success: false,
