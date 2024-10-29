@@ -1,24 +1,29 @@
-import React, { useState } from 'react';
+// src/components/Login.js
+import React, { useState, useContext } from 'react';
 import { Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Link, TextField, Typography, Avatar, Paper } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import loginUser from '../../services/opertions/auth';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/UserContext';
+
 const Login = ({ onLogin }) => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const { setUserData } = useContext(UserContext);
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const value = { userId, password, rememberMe };
 
     try {
-
       const response = await loginUser(value);
-
+console.log(response)
       if (response.success) {
-        onLogin(); // Update the login status in parent component
-        navigate('/'); 
+        setUserData(response);  // Save user data to context
+        onLogin();
+        navigate('/');
       } else {
         console.error(response.message);
       }

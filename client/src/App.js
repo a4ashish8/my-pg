@@ -5,7 +5,7 @@ import { ColorModeContext, useMode } from "./theme";
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Error from "./scenes/global/Error";
-
+import {UserProvider} from './context/UserContext';
 // pages load here
 import Dashboard from "./scenes/dashboard";
 import Totalusers from "./scenes/totalUsers";
@@ -23,6 +23,7 @@ function App() {
   };
 
   return (
+    <UserProvider>
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
@@ -65,6 +66,7 @@ function App() {
         </div>
       </ThemeProvider>
     </ColorModeContext.Provider>
+    </UserProvider>
   );
 }
 
