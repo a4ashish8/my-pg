@@ -1,4 +1,5 @@
-import { useState } from "react";
+// src/components/Sidebar.jsx
+import { useState, useContext } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -8,7 +9,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-
+import { UserContext } from "../../context/UserContext"; // Correctly import UserContext
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -31,9 +32,10 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 const Sidebar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const { userData } = useContext(UserContext); // Use useContext to get user data
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
-
+console.log(userData)
   return (
     <Box
       sx={{
@@ -85,11 +87,12 @@ const Sidebar = () => {
           {!isCollapsed && (
             <Box mb="25px">
               <Box display="flex" justifyContent="center" alignItems="center">
+                {/* Replace the image with a dynamic one from userData */}
                 <img
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={`../../assets/user.png`}
+                  src={userData?.userId  || `../../assets/user.png`} // Fallback image
                   style={{ cursor: "pointer", borderRadius: "50%" }}
                 />
               </Box>
@@ -100,10 +103,10 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Ashish Ranjan
+                  {userData?.userId  || "User Name"} {/* Fallback name */}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                  Admin
+                  {userData?.userId  || "Role"} {/* Fallback role */}
                 </Typography>
               </Box>
             </Box>
@@ -147,7 +150,6 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-
           </Box>
         </Menu>
       </ProSidebar>
