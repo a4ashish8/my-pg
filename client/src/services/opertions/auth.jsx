@@ -1,9 +1,7 @@
 import { toast } from "react-hot-toast";
 import { apiConnector } from "../apiconnector";
-import { userendpoints } from "../api";
-
-const { LOGIN_API } = userendpoints;
-
+import { authendpoints } from "../api";
+const { LOGIN_API } = authendpoints;
 
 // services/operations/auth.js
 
@@ -12,7 +10,7 @@ const loginUser = async (userData) => {
   let result = {};
 
   try {
-    const response = await apiConnector("POST", LOGIN_API, userData, { withCredentials: true });
+    const response = await apiConnector("POST", LOGIN_API, userData);
     if (!response?.data?.success) {
       toast.error(response.data.message || "Login failed");
       return response.data;
@@ -26,8 +24,10 @@ const loginUser = async (userData) => {
       success: false,
       message: error.message,
     };
-  }
 
+  }
+toast.dismiss(toastId);
+  return result;
 };
 
 export default loginUser;

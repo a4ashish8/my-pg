@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
-import {Box,Button,Checkbox,Container,CssBaseline,  FormControlLabel,  Grid,  Link,  TextField,  Typography,  Avatar,  Paper} from '@mui/material';
+import { Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Link, TextField, Typography, Avatar, Paper } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import loginUser from '../../services/opertions/auth'; // Adjust path if needed
-
+import loginUser from '../../services/opertions/auth';
+import {useNavigate} from 'react-router-dom';
 const Login = ({ onLogin }) => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const value = { userId, password, rememberMe };
 
     try {
+
       const response = await loginUser(value);
+
       if (response.success) {
         onLogin(); // Update the login status in parent component
+        navigate('/'); 
       } else {
         console.error(response.message);
       }

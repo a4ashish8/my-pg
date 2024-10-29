@@ -9,8 +9,6 @@ const authRoutes = require("./routes/Auth");
 const paymentRoutes = require("./routes/Payment");
 
 
-
-
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -47,7 +45,7 @@ cloudinaryConnect();
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/meal",mealRoutes);
 app.use("/api/v1/payment",paymentRoutes);
-app.use("./api/v1/auth",authRoutes);
+app.use("/api/v1/auth",authRoutes);
 //def route
 
 app.get("/", (req, res) => {
