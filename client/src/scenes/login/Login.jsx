@@ -1,4 +1,3 @@
-// src/components/Login.js
 import React, { useState, useContext } from 'react';
 import { Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Link, TextField, Typography, Avatar, Paper } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -19,10 +18,10 @@ const Login = ({ onLogin }) => {
 
     try {
       const response = await loginUser(value);
-console.log(response)
       if (response.success) {
-        setUserData(response);  // Save user data to context
+        setUserData(response); // Save user data to context
         onLogin();
+        localStorage.setItem("userData", JSON.stringify(response)); // Save user data
         navigate('/');
       } else {
         console.error(response.message);
