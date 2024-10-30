@@ -7,6 +7,7 @@ const userRoutes = require("./routes/User");
 const mealRoutes = require("./routes/Meal");
 const authRoutes = require("./routes/Auth");
 const paymentRoutes = require("./routes/Payment");
+const excelRoutes = require("./routes/Excel");
 
 
 const database = require("./config/database");
@@ -46,6 +47,7 @@ app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/meal",mealRoutes);
 app.use("/api/v1/payment",paymentRoutes);
 app.use("/api/v1/auth",authRoutes);
+app.use("/api/v1/excel",excelRoutes);
 //def route
 
 app.get("/", (req, res) => {
