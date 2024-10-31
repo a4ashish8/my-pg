@@ -35,7 +35,6 @@ const Sidebar = () => {
   const { userData } = useContext(UserContext); // Use useContext to get user data
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
-console.log(userData.user.userType)
   return (
     <Box
       sx={{

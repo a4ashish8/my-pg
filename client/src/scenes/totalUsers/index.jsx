@@ -1,14 +1,25 @@
-import {Box,Typography,useTheme,Table,TableBody,TableCell,TableContainer,TableHead,TableRow, Paper,} from "@mui/material";
-import { tokens } from "../../theme";
+import {
+  Box,
+  Typography,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 import Header from "../../components/Header";
 import { useEffect, useState } from "react";
 import { getAllUsers } from "../../services/opertions/user";
+import { getAllUserExcel } from "../../services/opertions/excel";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 const TotalUsers = () => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const fetchUsers = async () => {
     try {
       const res = await getAllUsers();
@@ -32,13 +43,28 @@ const TotalUsers = () => {
     fetchUsers();
   }, []);
 
+  const downloadExcel = async () => {
+    await getAllUserExcel(); // Call your function to download Excel
+  };
+
   return (
     <Box m="20px">
       <Header title="Total Users" subtitle="Managing the Users" />
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<FileDownloadIcon />}
+        onClick={downloadExcel} // Call the download function on click
+      >
+        Export to Excel
+      </Button>
       {loading ? (
         <Typography>Loading...</Typography>
       ) : (
-        <TableContainer component={Paper} sx={{ marginTop: "30px", overflowX: "auto" }}>
+        <TableContainer
+          component={Paper}
+          sx={{ marginTop: "30px", overflowX: "auto" }}
+        >
           <Table>
             <TableHead>
               <TableRow>

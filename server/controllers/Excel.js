@@ -6,10 +6,9 @@ exports.downloadAlluser = async (req, res) => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('alluser');
 
-    // Fetch all non-admin users and populate the `userDetails` field
+    // Fetch users and populate the worksheet
     const users = await Admin.find({ userType: { $ne: 'Admin' } }).populate('userDetails');
 
-    // Define the columns in the worksheet
     worksheet.columns = [
       { header: 'User ID', key: 'userId', width: 15 },
       { header: 'First Name', key: 'firstName', width: 20 },
@@ -23,7 +22,6 @@ exports.downloadAlluser = async (req, res) => {
       { header: 'Status', key: 'userStatus', width: 10 },
     ];
 
-    // Add rows dynamically based on user data
     users.forEach((user) => {
       worksheet.addRow({
         userId: user.userId,
@@ -39,14 +37,14 @@ exports.downloadAlluser = async (req, res) => {
       });
     });
 
-    // Set headers to trigger download in the client
+    // Set response headers for file download
     res.setHeader(
       'Content-Type',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     );
     res.setHeader('Content-Disposition', 'attachment; filename=UsersData.xlsx');
 
-    // Send the workbook as a response
+    // Write the workbook to the response directly
     await workbook.xlsx.write(res);
     res.end();
   } catch (error) {
