@@ -1,13 +1,14 @@
 import axios from "axios";
 
-export const axiosInstance = axios.create({});
+export const axiosInstance = axios.create();
 
-export const apiConnector = (method, url, bodyData, headers, params) => {
+export const apiConnector = (method, url, bodyData = null, headers = null, params = null, responseType = 'json') => {
   return axiosInstance({
-    method: `${method}`,
-    url: `${url}`,
-    data: bodyData || null,
-    headers: headers || null,
-    params: params || null,
+    method,
+    url,
+    data: bodyData,
+    headers,
+    params,
+    responseType, // Pass responseType to ensure Axios treats it as a Blob
   });
 };

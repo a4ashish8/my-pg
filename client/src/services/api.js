@@ -25,3 +25,9 @@ export const paymentendpoints = {
   REMINDER_API: `${BASE_URL}/payment/sendReminder`,
   PAYMENT_API: `${BASE_URL}/payment/sendPayment`,
 }
+
+
+// PAYMENT ENDPOINTS
+export const excelendpoints = {
+  GETALLUSEREXCEL_API: `${BASE_URL}/excel/downloadAlluser`,
+}
