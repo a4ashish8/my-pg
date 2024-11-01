@@ -91,7 +91,7 @@ const Sidebar = () => {
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={userData.user.userDetails.Image  || `../../assets/user.png`} // Fallback image
+                  src={userData.user.userDetails.Image || `../../assets/user.png`} // Fallback image
                   style={{ cursor: "pointer", borderRadius: "50%" }}
                 />
               </Box>
@@ -102,10 +102,10 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-{`${userData.user.userDetails.first_name ?? "User"} ${userData.user.userDetails.last_name ?? "Name"}`}
-</Typography>
+                  {`${userData.user.userDetails.first_name ?? "User"} ${userData.user.userDetails.last_name ?? "Name"}`}
+                </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                  { userData.user.userType || "Role"} {/* Fallback role */}
+                  {userData.user.userType || "Role"} {/* Fallback role */}
                 </Typography>
               </Box>
             </Box>

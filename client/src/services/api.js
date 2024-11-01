@@ -27,7 +27,6 @@ export const paymentendpoints = {
 }
 
 
-// PAYMENT ENDPOINTS
 export const excelendpoints = {
   GETALLUSEREXCEL_API: `${BASE_URL}/excel/downloadAlluser`,
 }

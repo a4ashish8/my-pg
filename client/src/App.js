@@ -11,7 +11,7 @@ import Totalusers from "./scenes/totalUsers";
 import UserForm from "./scenes/userform/index";
 import UpdateUser from "./scenes/userUpdate/index";
 import Login from "./scenes/login/Login";
-
+import MealForm from "./scenes/meal/saveMeal";
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
@@ -70,6 +70,13 @@ function App() {
                     isAuthenticated ? <UpdateUser /> : <Navigate to="/login" />
                   }
                 />
+                <Route
+                  path="/saveMeal"
+                  element={
+                    isAuthenticated ? <MealForm /> : <Navigate to="/login" />
+                  }
+                />
+
                 <Route
                   path="/login"
                   element={<Login onLogin={handleLogin} />}
