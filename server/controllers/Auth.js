@@ -81,7 +81,6 @@ exports.chngPassword = async (req, res) => {
     const user = await Admin.findOne({ userId: decode.userId })
     if (await bcrypt.compare(password, user.password)) {
       const hashedpassword = await bcrypt.hash(newPassword, 10);
-      console.log(hashedpassword);
       await Admin.findOneAndUpdate({ userId: decode.userId }, { password: hashedpassword }, { new: true });
       return res.status(200).json({
         message: "Password Update Successfully",

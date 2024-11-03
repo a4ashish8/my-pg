@@ -5,6 +5,7 @@ export const userendpoints = {
   USERADD_API: `${BASE_URL}/user/useradd`,
   ALLUSER_API: `${BASE_URL}/user/getAllUser`,
   UPDATEUSER_API: `${BASE_URL}/user/updateUser`,
+  UPDATESTATUS_API: `${BASE_URL}/user/UpdateStatusUser`,
 }
 
 // AUTH ENDPOINTS
@@ -27,7 +28,6 @@ export const paymentendpoints = {
 }
 
 
-// PAYMENT ENDPOINTS
 export const excelendpoints = {
   GETALLUSEREXCEL_API: `${BASE_URL}/excel/downloadAlluser`,
 }

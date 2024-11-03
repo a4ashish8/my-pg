@@ -72,7 +72,7 @@ exports.getAllUser = async (req, res) => {
       message: "data fetched",
     });
   } catch (error) {
-   
+
     return res.status(500).json({
       success: false,
       message: "All user api have an issues",
@@ -102,11 +102,9 @@ exports.updateUser = async (req, res) => {
         { $set: { first_name, last_name, emailId, phoneNo, ammount, joiningDate } },
         { new: true } // Return the updated document and run validation
       );
-
       if (!updatedUserDetail) {
         return res.status(404).json({ message: 'User details not found' });
       }
-
       res.status(200).json({ message: 'User details updated successfully', updatedUserDetail });
     } else {
       res.status(400).json({ message: 'No user details associated with this admin' });
@@ -120,14 +118,33 @@ exports.updateUser = async (req, res) => {
   }
 }
 
-exports.deleteUser = async (req,res)=>{
-  try{
+exports.deleteUser = async (req, res) => {
+  try {
 
-  }catch(error){
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
-      success:false,
-      message:"User delete have issues",
+      success: false,
+      message: "User delete have issues",
+    })
+  }
+}
+
+exports.UpdateStatusUser = async (req, res) => {
+  try {
+    const { _id, userStatus } = req.body;
+    const updatedUserDetail = await Admin.findOneAndUpdate(
+      { _id },
+      { $set: { userStatus } },
+      { new: true } // This will return the updated document
+    );
+
+    res.status(200).json({ message: 'User details updated successfully', updatedUserDetail });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "User delete have issues",
     })
   }
 }

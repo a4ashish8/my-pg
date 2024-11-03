@@ -4,10 +4,7 @@ require("dotenv").config();
 
 exports.saveTodayMeal = async (req, res) => {
     try {
-        const { breakfast, lunch, dinner } = req.body;
-        const token = req.cookies.token;
-        const decode = await jwt.verify(token, process.env.JWT_SECRET);
-
+        const { breakfast, lunch, dinner,userId } = req.body.values;
         if (!breakfast || !lunch || !dinner) {
             return res.status(400).json({
                 message: "All Fields are required",
@@ -23,7 +20,6 @@ exports.saveTodayMeal = async (req, res) => {
 
         // Find any existing meal entry for the same day
         const mealData = await Meal.findOne({
-           
             date: {
                 $gte: startOfDay,
                 $lte: endOfDay,
@@ -37,7 +33,7 @@ exports.saveTodayMeal = async (req, res) => {
                 lunch,
                 dinner,
                 date: new Date(),  // Store the current date and time
-                userId: decode.id,
+                userId,
             });
             return res.status(200).json({
                 message: "Meal Saved successfully",

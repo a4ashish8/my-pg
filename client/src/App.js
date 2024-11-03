@@ -5,12 +5,20 @@ import { ColorModeContext, useMode } from "./theme";
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Error from "./scenes/global/Error";
+
 import { UserProvider } from './context/UserContext';
+
 import Dashboard from "./scenes/dashboard";
-import Totalusers from "./scenes/totalUsers";
-import UserForm from "./scenes/userform/index";
-import UpdateUser from "./scenes/userUpdate/index";
+
+import AllUser from "./scenes/user/allUser";
+import AddUser from "./scenes/user/addUser";
+import EditUser from "./scenes/user/editUser";
+
 import Login from "./scenes/login/Login";
+
+import MealForm from "./scenes/meal/saveMeal";
+import AllMeal from "./scenes/meal/allMeal";
+import TodayMeal from "./scenes/meal/todayMeal";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -24,11 +32,11 @@ function App() {
     localStorage.setItem("isAuthenticated", JSON.stringify(true));
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("userData"); // Clear user data on logout
-  };
+  // const handleLogout = () => {
+  //   setIsAuthenticated(false);
+  //   localStorage.removeItem("isAuthenticated");
+  //   localStorage.removeItem("userData"); // Clear user data on logout
+  // };
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -46,34 +54,15 @@ function App() {
             <main className="content">
               {isAuthenticated && <Topbar setIsSidebar={setIsSidebar} />}
               <Routes>
-                <Route
-                  path="/"
-                  element={
-                    isAuthenticated ? <Dashboard /> : <Navigate to="/login" />
-                  }
-                />
-                <Route
-                  path="/totalUsers"
-                  element={
-                    isAuthenticated ? <Totalusers /> : <Navigate to="/login" />
-                  }
-                />
-                <Route
-                  path="/userReg"
-                  element={
-                    isAuthenticated ? <UserForm /> : <Navigate to="/login" />
-                  }
-                />
-                <Route
-                  path="/updateUser"
-                  element={
-                    isAuthenticated ? <UpdateUser /> : <Navigate to="/login" />
-                  }
-                />
-                <Route
-                  path="/login"
-                  element={<Login onLogin={handleLogin} />}
-                />
+                <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
+                <Route path="/totalUsers" element={isAuthenticated ? <AllUser /> : <Navigate to="/login" />} />
+                <Route path="/userReg" element={isAuthenticated ? <AddUser /> : <Navigate to="/login" />} />
+                <Route path="/updateUser" element={isAuthenticated ? <EditUser /> : <Navigate to="/login" />} />
+                <Route path="/saveMeal" element={isAuthenticated ? <MealForm /> : <Navigate to="/login" />} />
+                <Route path="/allMeal" element={isAuthenticated ? <AllMeal /> : <Navigate to="/login" />} />
+                <Route path="/todayMeal" element={isAuthenticated ? <TodayMeal /> : <Navigate to="/login" />} />
+
+                <Route path="/login" element={<Login onLogin={handleLogin} />} />
                 <Route path="/*" element={<Error />} />
               </Routes>
             </main>
