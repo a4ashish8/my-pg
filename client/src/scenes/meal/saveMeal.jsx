@@ -8,21 +8,21 @@ import { regMeal } from "../../services/opertions/meal";
 import { toast } from "react-hot-toast";
 import { UserContext } from "../../context/UserContext"; // Correctly import UserContext
 
-const UserForm = () => {
+const MealForm = () => {
   const [apiError, setApiError] = useState(""); // State for storing API error messages
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const { userData } = useContext(UserContext); // Use useContext to get user data
-  console.log(userData); // Log userData to verify it’s available
 
   const handleFormSubmit = async (values) => {
     try {
-      const result = await regMeal({ ...values, userId: userData.id }); // Pass userId with form values
+      values.userId = userData.user._id;
+      const result = await regMeal({values}); // Pass userId with form values
       if (!result.success) {
         setApiError(result.message); // Set the error message from the API response
       } else {
         setApiError(""); // Clear error if the registration was successful
-        toast.success("User registered successfully!");
-        window.location.href = "/"; // Redirecting to home page after successful registration
+        toast.success("Meal saved successfully!");
+        window.location.href = "/allMeal"; // Redirecting to home page after successful registration
       }
     } catch (error) {
       console.error("Registration error:", error);
@@ -128,4 +128,4 @@ const initialValues = {
   userId: "", // userId will be set in handleFormSubmit
 };
 
-export default UserForm;
+export default MealForm;

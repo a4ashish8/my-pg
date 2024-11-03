@@ -7,7 +7,7 @@ import Header from "../../components/Header";
 import { regUser } from "../../services/opertions/user";
 import { toast } from "react-hot-toast";
 
-const UpdateUser = () => {
+const AddUser = () => {
   const [apiError, setApiError] = useState(""); // State for storing API error messages
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
@@ -19,17 +19,18 @@ const UpdateUser = () => {
       } else {
         setApiError(""); // Clear error if the registration was successful
         toast.success("User registered successfully!");
+        // Redirect to home or do any additional action
         window.location.href = "/"; // Redirecting to home page after successful registration
       }
     } catch (error) {
-      console.error("Update user error:", error);
+      console.error("Registration error:", error);
       setApiError("An unexpected error occurred. Please try again."); // Set a generic error message
     }
   };
 
   return (
     <Box m="20px">
-      <Header title="Update USER" subtitle="Update a User Profile" />
+      <Header title="CREATE USER" subtitle="Create a New User Profile" />
 
       {/* Display API error message if it exists */}
       {apiError && (
@@ -145,6 +146,7 @@ const UpdateUser = () => {
                 error={!!touched.ammount && !!errors.ammount}
                 helperText={touched.ammount && errors.ammount}
               />
+
               <TextField
                 fullWidth
                 variant="filled"
@@ -171,9 +173,11 @@ const UpdateUser = () => {
                   <FormControlLabel value="User" control={<Radio />} label="User" />
                 </RadioGroup>
                 {touched.userType && errors.userType && (
-                  <div style={{ color: "red" }}>{errors.userType}</div>
+                  <div style={{ color: 'red' }}>{errors.userType}</div>
                 )}
               </Box>
+
+              {/* User Status Toggle */}
               <Box gridColumn={isNonMobile ? "span 3" : "span 6"}>
                 <FormControlLabel
                   control={
@@ -230,4 +234,4 @@ const initialValues = {
   userType: "",
 };
 
-export default UpdateUser;
+export default AddUser;

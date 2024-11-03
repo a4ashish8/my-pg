@@ -149,6 +149,32 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 20px" }}
+            >
+              Meal
+            </Typography>
+            <Item
+              title="Save Meal"
+              to="/saveMeal"
+              icon={<PersonAddAltIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            /> <Item
+              title="All Meal"
+              to="/allMeal"
+              icon={<PersonAddAltIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            /> <Item
+              title="Today Meal"
+              to="/todayMeal"
+              icon={<PersonAddAltIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
           </Box>
         </Menu>
       </ProSidebar>

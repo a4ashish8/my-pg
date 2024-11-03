@@ -4,9 +4,7 @@ require("dotenv").config();
 
 exports.saveTodayMeal = async (req, res) => {
     try {
-        const { breakfast, lunch, dinner,userId } = req.body;
-       
-
+        const { breakfast, lunch, dinner,userId } = req.body.values;
         if (!breakfast || !lunch || !dinner) {
             return res.status(400).json({
                 message: "All Fields are required",

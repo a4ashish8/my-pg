@@ -8,7 +8,7 @@ export const regMeal = async (userData) => {
   const toastId = toast.loading("Registering meal...");
   let result = {};
   try {
-    console.log(userData)
+    
     const response = await apiConnector("POST", SAVEMEAL_API, userData);
 
     if (!response?.data?.success) {
@@ -17,7 +17,7 @@ export const regMeal = async (userData) => {
 
     result = response?.data || {};
     toast.success("Meal Saved successfully!");
-    getAllUsers();
+    getAllMeals();
   } catch (error) {
     console.error("SAVEMEAL_API ERROR:", error.message, error);
     toast.error("Failed to save Meal: " + error.message);
@@ -30,7 +30,7 @@ export const regMeal = async (userData) => {
   return result;
 };
 
-export const getAllUsers = async () => {
+export const getAllMeals = async () => {
   const toastId = toast.loading("Loading users...");
   let result = [];
   try {
@@ -42,3 +42,20 @@ export const getAllUsers = async () => {
   toast.dismiss(toastId);
   return result;
 };
+
+
+export const getTodayMeal = async () => {
+  const toastId = toast.loading("Loading users...");
+  let result = [];
+  try {
+    const response = await apiConnector("GET", TODAYMEAL_API);
+    result = response?.data || [];
+  } catch (error) {
+    console.error("ALLUSER_API ERROR:", error.message, error);
+  }
+  toast.dismiss(toastId);
+  return result;
+};
+
+
+

@@ -11,9 +11,6 @@ export const getAllUserExcel = async () => {
     const response = await apiConnector("GET", GETALLUSEREXCEL_API, null, {
       Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     }, null, "blob");
-    
-    console.log("Response type:", response.data.constructor.name); // Check response type
-
     if (response.data && response.data instanceof Blob) { 
       const url = URL.createObjectURL(response.data);
       const link = document.createElement("a");
