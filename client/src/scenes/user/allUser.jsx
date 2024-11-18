@@ -5,6 +5,7 @@ import {
 } from "@mui/material";
 import Header from "../../components/Header";
 import { useEffect, useState } from "react";
+import {useNavigate} from 'react-router-dom';
 import { getAllUsers, statusUpdate } from "../../services/opertions/user";
 import { getAllUserExcel } from "../../services/opertions/excel";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -14,7 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const AllUser = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate(); // Corrected to use `useNavigate` hook
   const fetchUsers = async () => {
     try {
       const res = await getAllUsers();
@@ -61,15 +62,6 @@ const AllUser = () => {
     }
   };
 
-  const handleEdit = (userId) => {
-    // Add your edit functionality here
-    console.log("Edit user:", userId);
-  };
-
-  const handleDelete = (userId) => {
-    // Add your delete functionality here
-    console.log("Delete user:", userId);
-  };
 
 
   return (
@@ -115,12 +107,12 @@ const AllUser = () => {
                   <TableCell>{user.phone}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
-                    <IconButton aria-label="edit" onClick={() => handleEdit(user.id)}>
+                    <IconButton aria-label="edit" onClick={() => navigate(`/UpdateUser?id=${user.id}`)}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton aria-label="delete" onClick={() => handleDelete(user.id)}>
+                    {/* <IconButton aria-label="delete" onClick={() => handleDelete(user.id)}>
                       <DeleteIcon />
-                    </IconButton>
+                    </IconButton> */}
                   </TableCell>
                 </TableRow>
               ))}

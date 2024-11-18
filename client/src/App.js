@@ -20,6 +20,7 @@ import MealForm from "./scenes/meal/saveMeal";
 import AllMeal from "./scenes/meal/allMeal";
 import TodayMeal from "./scenes/meal/todayMeal";
 
+import RequestPayment from "./scenes/payment/sendReminer";
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
@@ -61,7 +62,8 @@ function App() {
                 <Route path="/saveMeal" element={isAuthenticated ? <MealForm /> : <Navigate to="/login" />} />
                 <Route path="/allMeal" element={isAuthenticated ? <AllMeal /> : <Navigate to="/login" />} />
                 <Route path="/todayMeal" element={isAuthenticated ? <TodayMeal /> : <Navigate to="/login" />} />
-
+                <Route path="/requestPayment" element={isAuthenticated ? <RequestPayment /> : <Navigate to="/login" />} />
+           
                 <Route path="/login" element={<Login onLogin={handleLogin} />} />
                 <Route path="/*" element={<Error />} />
               </Routes>

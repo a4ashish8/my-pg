@@ -10,7 +10,6 @@ exports.addUser = async (req, res) => {
     // Destructure fields from the request body
     const { first_name, last_name, emailId, password, userType, phoneNo, userStatus, ammount, joiningDate } = req.body
     // Check if All Details are there or not
-
     if (!first_name || !last_name || !emailId || !password) {
       return res.status(403).send({
         success: false,
@@ -83,25 +82,23 @@ exports.getAllUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    const { first_name, last_name, emailId, phoneNo, ammount, joiningDate } = req.body;
-    const token = req.cookies.token;
+    const userData = req.body;
+    console.log(userData)
 
-    // Verify token and get decoded data
-    const decode = await jwt.verify(token, process.env.JWT_SECRET);
 
     // Find the admin document and get the userDetails reference
-    const admin = await Admin.findOne({ _id: decode.id });
+    const admin = await Details.findOne({ _id: userData._id });
     if (!admin) {
       return res.status(404).json({ message: 'Admin not found' });
     }
-
-    if (admin.userDetails) {
+    if (admin) {
       // Update userDetail document
       const updatedUserDetail = await Details.findOneAndUpdate(
-        { _id: admin.userDetails._id },
-        { $set: { first_name, last_name, emailId, phoneNo, ammount, joiningDate } },
+        { _id: admin._id },
+        { $set: { userData } },
         { new: true } // Return the updated document and run validation
       );
+
       if (!updatedUserDetail) {
         return res.status(404).json({ message: 'User details not found' });
       }
@@ -145,6 +142,26 @@ exports.UpdateStatusUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "User delete have issues",
+    })
+  }
+}
+
+exports.editUser = async (req, res) => {
+  try {
+    const { _id } = req.query;
+    if (!_id) {
+      return res.status(404).json({ error: "User Id found" });
+    }
+    const users = await Admin.findOne({ _id }).populate('userDetails');
+
+    if (!users) {
+      return res.status(404).json({ error: "User Not found" });
+    }
+    res.status(200).json({ message: 'User details updated successfully', users });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Edit Api Have an issues",
     })
   }
 }

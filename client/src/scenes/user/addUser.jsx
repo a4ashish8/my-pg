@@ -170,7 +170,7 @@ const AddUser = () => {
                   onBlur={handleBlur}
                 >
                   <FormControlLabel value="Admin" control={<Radio />} label="Admin" />
-                  <FormControlLabel value="User" control={<Radio />} label="User" />
+                  <FormControlLabel value="Users" control={<Radio />} label="User" />
                 </RadioGroup>
                 {touched.userType && errors.userType && (
                   <div style={{ color: 'red' }}>{errors.userType}</div>
@@ -184,13 +184,13 @@ const AddUser = () => {
                     <Switch
                       checked={values.userStatus === "Active"}
                       onChange={(event) => {
-                        setFieldValue("userStatus", event.target.checked ? "Active" : "Deactivate");
+                        setFieldValue("userStatus", event.target.checked ? "Active" : "Deactive");
                       }}
                       name="userStatus"
                       color="primary"
                     />
                   }
-                  label={values.userStatus === "Active" ? "Active" : "Deactivate"}
+                  label={values.userStatus === "Active" ? "Active" : "Deactive"}
                 />
               </Box>
             </Box>
@@ -230,7 +230,7 @@ const initialValues = {
   phoneNo: "",
   ammount: "",
   joiningDate: "",
-  userStatus: "Deactivate",
+  userStatus: "Active",
   userType: "",
 };
 

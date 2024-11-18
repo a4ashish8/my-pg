@@ -1,8 +1,9 @@
 const express = require("express")
 const router = express.Router()
 
-const {sendReminder,sendPayment} = require("../controllers/Payment");
+const {requestPayment,sendReminder,sendPayment} = require("../controllers/Payment");
 
+router.get("/requestPayment",requestPayment);
 router.post("/sendReminder",sendReminder);
 router.put("/sendPayment",sendPayment);
 
