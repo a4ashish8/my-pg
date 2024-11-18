@@ -46,8 +46,6 @@ export const statusUpdate = async (userData) => {
   const toastId = toast.loading("Registering user...");
   let result = {};
   try {
-    console.log(userData);
-    console.log(UPDATESTATUS_API)
     const response = await apiConnector("PUT", UPDATESTATUS_API, userData);
 
     if (!response?.data?.success) {

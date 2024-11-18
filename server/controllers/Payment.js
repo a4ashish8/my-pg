@@ -25,7 +25,7 @@ exports.sendReminder = async (req, res) => {
 
         if (checkPayment.length > 0) {
             totalAmountDue = checkPayment[0].duesAmmount || 0;
-            console.log(totalAmountDue);
+           
         }
 
         if (existingReminder) {
@@ -82,7 +82,7 @@ exports.sendReminder = async (req, res) => {
 exports.sendPayment = async (req, res) => {
     try {
         const { paymentAmmount } = req.body;
-        console.log(req.body);
+       
     } catch (error) {
         console.error('Error in payment:', error);
         return res.status(500).json({
@@ -137,9 +137,7 @@ exports.requestPayment = async (req, res) => {
             };
             return acc;
         }, {});
-        
-        console.log(userDues);
-        
+             
         
         return res.status(200).json({
             success: true,

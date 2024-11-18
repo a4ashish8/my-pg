@@ -24,7 +24,7 @@ const RequestPayment = () => {
         // Process and set user data
         const formattedUsers = data.userDetails.map((user) => {
           const dues = data.userDues[user._id] || {}; // Get the first dues object for the user ID or default to an empty object
-          console.log(dues)
+         
 
           return {
             id: user._id,
