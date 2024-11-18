@@ -16,7 +16,7 @@ const EditUser = () => {
 
   const handleFormSubmit = async (values) => {
     try {
-      console.log(values)
+     
       const result = await updateUser(values);
       if (!result.success) {
         setApiError(result.message);
@@ -34,7 +34,7 @@ const EditUser = () => {
   const fetchUser = async () => {
     try {
       const res = await getEditUser();
-      console.log(res)
+    
       if (res && res.users) {
         const userData = {
           _id :res.users.userDetails._id,
@@ -45,7 +45,7 @@ const EditUser = () => {
           amount: res.users.userDetails.ammount,
         };
         setUser(userData); // Set user data in state
-        console.log("Fetched user data:", userData); // Debugging: log user data
+       
       }
     } catch (error) {
       console.error("Could not fetch user details", error);
