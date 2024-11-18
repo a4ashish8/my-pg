@@ -8,12 +8,30 @@ import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import PaymentIcon from "@mui/icons-material/Payment";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import TodayIcon from "@mui/icons-material/Today";
 import { UserContext } from "../../context/UserContext"; // Correctly import UserContext
+
+// Icon mapping for titles
+const icons = {
+  "Dashboard": <HomeOutlinedIcon />,
+  "Total Users": <PeopleOutlinedIcon />,
+  "Create User": <PersonAddAltIcon />,
+  "Update User": <PersonAddAltIcon />,
+  "Send Reminder": <PaymentIcon />,
+  "Approve Payment": <PaymentIcon />,
+  "All payment": <PaymentIcon />,
+  "Save Meal": <RestaurantIcon />,
+  "All Meal": <RestaurantIcon />,
+  "Today Meal": <TodayIcon />,
+};
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
   return (
     <MenuItem
       active={selected === title}
@@ -35,6 +53,7 @@ const Sidebar = () => {
   const { userData } = useContext(UserContext); // Use useContext to get user data
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+
   return (
     <Box
       sx={{
@@ -91,7 +110,7 @@ const Sidebar = () => {
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={userData.user.userDetails.Image || `../../assets/user.png`} // Fallback image
+                  src={userData?.user?.userDetails?.Image || `../../assets/user.png`} // Fallback image
                   style={{ cursor: "pointer", borderRadius: "50%" }}
                 />
               </Box>
@@ -102,24 +121,28 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  {`${userData.user.userDetails.first_name ?? "User"} ${userData.user.userDetails.last_name ?? "Name"}`}
+                  {`${userData?.user?.userDetails?.first_name ?? "User"} ${
+                    userData?.user?.userDetails?.last_name ?? "Name"
+                  }`}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                  {userData.user.userType || "Role"} {/* Fallback role */}
+                  {userData?.user?.userType || "Role"} {/* Fallback role */}
                 </Typography>
               </Box>
             </Box>
           )}
 
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+            {/* Dashboard */}
             <Item
               title="Dashboard"
               to="/"
-              icon={<HomeOutlinedIcon />}
+              icon={icons["Dashboard"]}
               selected={selected}
               setSelected={setSelected}
             />
 
+            {/* Users Section */}
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -130,25 +153,56 @@ const Sidebar = () => {
             <Item
               title="Total Users"
               to="/totalUsers"
-              icon={<PeopleOutlinedIcon />}
+              icon={icons["Total Users"]}
               selected={selected}
               setSelected={setSelected}
             />
-
             <Item
               title="Create User"
               to="/userReg"
-              icon={<PersonAddAltIcon />}
+              icon={icons["Create User"]}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Update User"
               to="/UpdateUser"
-              icon={<PersonAddAltIcon />}
+              icon={icons["Update User"]}
               selected={selected}
               setSelected={setSelected}
             />
+
+            {/* Payment Section */}
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 20px" }}
+            >
+              Payment
+            </Typography>
+            <Item
+              title="Send Reminder"
+              to="/requestPayment"
+              icon={icons["Send Reminder"]}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Approve Payment"
+              to="/approvePayment"
+              icon={icons["Approve Payment"]}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="All payment"
+              to="/totalPayment"
+              icon={icons["All payment"]}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            {/* Meal Section */}
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -159,19 +213,21 @@ const Sidebar = () => {
             <Item
               title="Save Meal"
               to="/saveMeal"
-              icon={<PersonAddAltIcon />}
+              icon={icons["Save Meal"]}
               selected={selected}
               setSelected={setSelected}
-            /> <Item
+            />
+            <Item
               title="All Meal"
               to="/allMeal"
-              icon={<PersonAddAltIcon />}
+              icon={icons["All Meal"]}
               selected={selected}
               setSelected={setSelected}
-            /> <Item
+            />
+            <Item
               title="Today Meal"
               to="/todayMeal"
-              icon={<PersonAddAltIcon />}
+              icon={icons["Today Meal"]}
               selected={selected}
               setSelected={setSelected}
             />

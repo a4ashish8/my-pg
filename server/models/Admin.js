@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const mailSender = require("../utils/mailSender");
-const userRegTemplate = require("../mail/templates/userReg");
+const { userRegTemplate } = require("../mail/templates/userReg");
 
 const adminSchema = new mongoose.Schema({
     userId: {

@@ -1,37 +1,65 @@
-import React, { useState } from "react";
-import { Box, Button, TextField, FormControlLabel, Switch, RadioGroup, Radio } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Button, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
-import { regUser } from "../../services/opertions/user";
+import { updateUser, getEditUser } from "../../services/opertions/user";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const EditUser = () => {
-  const [apiError, setApiError] = useState(""); // State for storing API error messages
+  const [apiError, setApiError] = useState("");
+  const [user, setUser] = useState(null); // State to store the user data
   const isNonMobile = useMediaQuery("(min-width:600px)");
+  const navigate = useNavigate();
 
   const handleFormSubmit = async (values) => {
     try {
-      const result = await regUser(values);
+      console.log(values)
+      const result = await updateUser(values);
       if (!result.success) {
-        setApiError(result.message); // Set the error message from the API response
+        setApiError(result.message);
       } else {
-        setApiError(""); // Clear error if the registration was successful
-        toast.success("User registered successfully!");
-        window.location.href = "/"; // Redirecting to home page after successful registration
+        setApiError("");
+        toast.success("User updated successfully!");
+        navigate("/");
       }
     } catch (error) {
       console.error("Update user error:", error);
-      setApiError("An unexpected error occurred. Please try again."); // Set a generic error message
+      setApiError("An unexpected error occurred. Please try again.");
     }
   };
+
+  const fetchUser = async () => {
+    try {
+      const res = await getEditUser();
+      console.log(res)
+      if (res && res.users) {
+        const userData = {
+          _id :res.users.userDetails._id,
+          first_name: res.users.userDetails.first_name,
+          last_name: res.users.userDetails.last_name,
+          emailId: res.users.userDetails.emailId,
+          phoneNo: res.users.userDetails.phoneNo,
+          amount: res.users.userDetails.ammount,
+        };
+        setUser(userData); // Set user data in state
+        console.log("Fetched user data:", userData); // Debugging: log user data
+      }
+    } catch (error) {
+      console.error("Could not fetch user details", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   return (
     <Box m="20px">
       <Header title="Update USER" subtitle="Update a User Profile" />
 
-      {/* Display API error message if it exists */}
       {apiError && (
         <Box color="red" mb={2}>
           {apiError}
@@ -40,8 +68,9 @@ const EditUser = () => {
 
       <Formik
         onSubmit={handleFormSubmit}
-        initialValues={initialValues}
+        initialValues={user || {}} // Use fetched user data as initial values
         validationSchema={checkoutSchema}
+        enableReinitialize // Reinitialize form when user data changes
       >
         {({
           values,
@@ -51,6 +80,8 @@ const EditUser = () => {
           handleChange,
           handleSubmit,
           setFieldValue,
+          isValid,
+          isSubmitting,
         }) => (
           <form onSubmit={handleSubmit}>
             <Box
@@ -61,30 +92,8 @@ const EditUser = () => {
                 "& > div": { gridColumn: isNonMobile ? "span 3" : "span 6" },
               }}
             >
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="User Name"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.userid}
-                name="userid"
-                error={!!touched.userid && !!errors.userid}
-                helperText={touched.userid && errors.userid}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="password"
-                label="Password"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.password}
-                name="password"
-                error={!!touched.password && !!errors.password}
-                helperText={touched.password && errors.password}
-              />
+         
+           
               <TextField
                 fullWidth
                 variant="filled"
@@ -97,6 +106,7 @@ const EditUser = () => {
                 error={!!touched.first_name && !!errors.first_name}
                 helperText={touched.first_name && errors.first_name}
               />
+              
               <TextField
                 fullWidth
                 variant="filled"
@@ -109,6 +119,7 @@ const EditUser = () => {
                 error={!!touched.last_name && !!errors.last_name}
                 helperText={touched.last_name && errors.last_name}
               />
+
               <TextField
                 fullWidth
                 variant="filled"
@@ -140,59 +151,17 @@ const EditUser = () => {
                 label="Amount"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.ammount}
-                name="ammount"
-                error={!!touched.ammount && !!errors.ammount}
-                helperText={touched.ammount && errors.ammount}
+                value={values.amount}
+                name="amount"
+                error={!!touched.amount && !!errors.amount}
+                helperText={touched.amount && errors.amount}
               />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="date"
-                label="Activation Date"
-                InputLabelProps={{ shrink: true }}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.joiningDate}
-                name="joiningDate"
-                error={!!touched.joiningDate && !!errors.joiningDate}
-                helperText={touched.joiningDate && errors.joiningDate}
-              />
-              <Box gridColumn={isNonMobile ? "span 3" : "span 6"}>
-                <label>User Type</label>
-                <RadioGroup
-                  row
-                  name="userType"
-                  value={values.userType}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                >
-                  <FormControlLabel value="Admin" control={<Radio />} label="Admin" />
-                  <FormControlLabel value="User" control={<Radio />} label="User" />
-                </RadioGroup>
-                {touched.userType && errors.userType && (
-                  <div style={{ color: "red" }}>{errors.userType}</div>
-                )}
-              </Box>
-              <Box gridColumn={isNonMobile ? "span 3" : "span 6"}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={values.userStatus === "Active"}
-                      onChange={(event) => {
-                        setFieldValue("userStatus", event.target.checked ? "Active" : "Deactivate");
-                      }}
-                      name="userStatus"
-                      color="primary"
-                    />
-                  }
-                  label={values.userStatus === "Active" ? "Active" : "Deactivate"}
-                />
-              </Box>
+            <input type="hidden" value={values._id}></input>
+
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
-                Create New User
+              <Button type="submit" color="secondary" variant="contained" disabled={!isValid || isSubmitting}>
+                Update User
               </Button>
             </Box>
           </form>
@@ -206,28 +175,10 @@ const EditUser = () => {
 const phoneRegExp = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
 const checkoutSchema = yup.object().shape({
-  userid: yup.string().required("required"),
-  password: yup.string().required("required"),
   first_name: yup.string().required("required"),
   last_name: yup.string().required("required"),
   emailId: yup.string().email("invalid email").required("required"),
   phoneNo: yup.string().matches(phoneRegExp, "Phone number is not valid").required("required"),
-  joiningDate: yup.string().required("required"),
-  userType: yup.string().required("User type is required"),
 });
-
-// Initialize form values
-const initialValues = {
-  userid: "",
-  password: "",
-  first_name: "",
-  last_name: "",
-  emailId: "",
-  phoneNo: "",
-  ammount: "",
-  joiningDate: "",
-  userStatus: "Deactivate",
-  userType: "",
-};
 
 export default EditUser;

@@ -24,7 +24,7 @@ exports.sendReminder = async (req, res) => {
         let totalAmountDue = 0;
 
         if (checkPayment.length > 0) {
-            totalAmountDue = checkPayment[0].duesAmmount || 0; 
+            totalAmountDue = checkPayment[0].duesAmmount || 0;
             console.log(totalAmountDue);
         }
 
@@ -79,11 +79,77 @@ exports.sendReminder = async (req, res) => {
 };
 
 
-exports.sendPayment =  async (req,res) =>{
-    try{
-const{paymentAmmount} = req.body;
-console.log(req.body);
-    }catch(error){
+exports.sendPayment = async (req, res) => {
+    try {
+        const { paymentAmmount } = req.body;
+        console.log(req.body);
+    } catch (error) {
+        console.error('Error in payment:', error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+}
+
+exports.requestPayment = async (req, res) => {
+    try {
+        // MongoDB query
+        const userDetails = await Admin.find({
+            userType: { $ne: 'Admin' }, // Exclude Admin users
+            userStatus: { $eq: 'Active' }, // Only Active users
+
+        }).populate("userDetails");
+
+        const transformedUserDues = await Payment.aggregate([
+            {
+                $sort: { createdAt: -1 } // Sort payments by `createdAt` in descending order
+            },
+            {
+                $group: {
+                    _id: "$userId", // Group by `userId`
+                    latestPayment: { $first: "$$ROOT" } // Select the first (latest) payment document
+                }
+            },
+            {
+                $project: {
+                    _id: 0, // Exclude `_id` from the final output
+                    userId: "$_id", // Rename `_id` to `userId`
+                    duesMonth: "$latestPayment.duesMonth",
+                    duesYear: "$latestPayment.duesYear",
+                    duesAmount: "$latestPayment.duesAmount",
+                    amountPaid: "$latestPayment.amountPaid",
+                    status: "$latestPayment.status",
+                    paymentDate: "$latestPayment.paymentDate"
+                }
+            }
+        ]);
+        
+        // Transform the result into the desired object structure
+        const userDues = transformedUserDues.reduce((acc, item) => {
+            acc[item.userId] = {
+                duesMonth: item.duesMonth,
+                duesYear: item.duesYear,
+                duesAmount: item.duesAmount,
+                amountPaid: item.amountPaid,
+                status: item.status,
+                paymentDate: item.paymentDate
+            };
+            return acc;
+        }, {});
+        
+        console.log(userDues);
+        
+        
+        return res.status(200).json({
+            success: true,
+            message: "Data fetched",
+            userDues,
+            userDetails,
+        });
+        
+        console.log(userDues);
+    } catch (error) {
         console.error('Error in payment:', error);
         return res.status(500).json({
             success: false,

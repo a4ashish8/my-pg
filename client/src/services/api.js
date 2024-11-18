@@ -1,11 +1,13 @@
 const BASE_URL = "http://localhost:8000/api/v1"
 
+
 // USER ENDPOINTS
 export const userendpoints = {
   USERADD_API: `${BASE_URL}/user/useradd`,
   ALLUSER_API: `${BASE_URL}/user/getAllUser`,
   UPDATEUSER_API: `${BASE_URL}/user/updateUser`,
   UPDATESTATUS_API: `${BASE_URL}/user/UpdateStatusUser`,
+  EDITUSER_API: `${BASE_URL}/user/editUser`,
 }
 
 // AUTH ENDPOINTS
@@ -23,6 +25,7 @@ export const mealendpoints = {
 
 // PAYMENT ENDPOINTS
 export const paymentendpoints = {
+  REQUESTPAYMENT_API: `${BASE_URL}/payment/requestPayment`,
   REMINDER_API: `${BASE_URL}/payment/sendReminder`,
   PAYMENT_API: `${BASE_URL}/payment/sendPayment`,
 }
