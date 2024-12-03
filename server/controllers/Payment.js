@@ -1,17 +1,19 @@
 const Admin = require("../models/Admin");
 const Payment = require("../models/Payment");
-// const sendEmail = require("../services/emailService"); // Uncomment and use your actual email service
+const mailSender = require("../utils/mailSender");
+const { userRegTemplate } = require("../mail/templates/userReg");
 
 exports.sendReminder = async (req, res) => {
     try {
-        const { userId, paymentAmmount, collector } = req.body;
-
-        if (!userId || !paymentAmmount || !collector) {
+        const { userId, ammount, email } = req.body;
+        console.log(req.body)
+        if (!userId) {
             return res.status(400).json({
                 message: "Fill all required fields",
                 success: false,
             });
         }
+
 
         const now = new Date();
         const duesYear = now.getFullYear();
@@ -25,16 +27,14 @@ exports.sendReminder = async (req, res) => {
 
         if (checkPayment.length > 0) {
             totalAmountDue = checkPayment[0].duesAmmount || 0;
-           
+
         }
 
         if (existingReminder) {
             // Send email notification
-            // await sendEmail({
-            //     to: userDetails.email, // Adjust based on your actual user email field
-            //     subject: 'Payment Reminder',
-            //     text: `Reminder: Your total dues are $${totalAmountDue}. Please make the payment.`
-            // });
+            const title = 'Welcome to the Platform!';
+            const body = userRegTemplate(email, totalAmountDue);
+            await mailSender(email, title, body);
 
             return res.status(200).json({
                 message: "Reminder already sent. Email notification triggered.",
@@ -46,22 +46,24 @@ exports.sendReminder = async (req, res) => {
         const newReminder = await Payment.create({
             duesMonth,
             duesYear,
-            paymentAmmount,
+            paymentAmmount :ammount,
             userId,
             paymentDate: Date.now(),
             ammountPaid: 0, // Initialize with 0 or your preferred initial value
-            duesAmmount: paymentAmmount + totalAmountDue, // Add the current payment amount to the total dues
-            collector,
+            duesAmmount: ammount + totalAmountDue, // Add the current payment amount to the total dues
+            
             status: 'Pending',
             createdAt: Date.now(),
         });
 
         // Send email notification
-        // await sendEmail({
-        //     to: userDetails.email, // Adjust based on your actual user email field
-        //     subject: 'Payment Reminder',
-        //     text: `Reminder: You have a new payment reminder of $${paymentAmmount}. Please make the payment.`
-        // });
+
+
+
+        const title = 'Welcome to the Platform!';
+        const body = userRegTemplate(email, totalAmountDue);
+        await mailSender(email, title, body);
+
 
         return res.status(200).json({
             message: "Payment reminder saved and email notification sent.",
@@ -82,7 +84,7 @@ exports.sendReminder = async (req, res) => {
 exports.sendPayment = async (req, res) => {
     try {
         const { paymentAmmount } = req.body;
-       
+
     } catch (error) {
         console.error('Error in payment:', error);
         return res.status(500).json({
@@ -124,7 +126,7 @@ exports.requestPayment = async (req, res) => {
                 }
             }
         ]);
-        
+
         // Transform the result into the desired object structure
         const userDues = transformedUserDues.reduce((acc, item) => {
             acc[item.userId] = {
@@ -137,16 +139,16 @@ exports.requestPayment = async (req, res) => {
             };
             return acc;
         }, {});
-             
-        
+
+
         return res.status(200).json({
             success: true,
             message: "Data fetched",
             userDues,
             userDetails,
         });
-        
-        console.log(userDues);
+
+
     } catch (error) {
         console.error('Error in payment:', error);
         return res.status(500).json({

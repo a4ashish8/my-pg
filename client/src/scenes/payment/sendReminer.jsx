@@ -1,42 +1,47 @@
-import {
-  Box, Typography, Button, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow, Paper, IconButton
-} from "@mui/material";
+import { Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
 import Header from "../../components/Header";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { duesPayment } from "../../services/opertions/payment";
+// import { useNavigate } from "react-router-dom";
+import { duesPayment, sendReminder } from "../../services/opertions/payment";
 
 const RequestPayment = () => {
   const [users, setUsers] = useState([]); // State to store user data
   const [loading, setLoading] = useState(true); // State for loading status
-  const navigate = useNavigate(); // Navigation hook
+  // const navigate = useNavigate(); // Navigation hook
 
-  const sendMail = async (id) => {
-    console.log(id)
+  const sendMail = async (id, amount, emailId) => {
+    console.log("Send mail triggered for ID:", id);
+
+    const data = {
+      userId: id, // or simply `id` if key and value are the same
+      ammount: amount || 0,
+      email: emailId
+    };
+
+    await sendReminder(data);
   };
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await duesPayment(); // Call the API function  
+        const data = await duesPayment(); 
+        // Call the API function
         // Process and set user data
         const formattedUsers = data.userDetails.map((user) => {
-          const dues = data.userDues[user._id] || {}; // Get the first dues object for the user ID or default to an empty object
-         
+          const dues = data.userDues[user._id] || {}; // Get dues for the user ID or default to an empty object
 
           return {
             id: user._id,
-
             name: `${user.userDetails.first_name} ${user.userDetails.last_name}` || "N/A",
-            phone: user.userDetails.phoneNo || "N/A", // Replace with actual property if exists
-            email: user.userDetails.emailId, // Assuming `userId` is the email  
-            joiningDate: user.userDetails.joiningDate,
+            phone: user.userDetails.phoneNo || "N/A",
+            email: user.userDetails.emailId || "N/A",
+            ammount: user.userDetails.ammount || 0,
+            joiningDate: user.userDetails.joiningDate || "N/A",
             duesMonth: dues.duesMonth || "N/A",
             duesYear: dues.duesYear || "N/A",
             duesAmount: dues.duesAmount || 0,
-            paymentDate: dues.paymentDate,
+            paymentDate: dues.paymentDate || "N/A",
             paymentStatus: dues.status || "Not Done",
           };
         });
@@ -48,13 +53,12 @@ const RequestPayment = () => {
         setLoading(false); // Stop loading even on error
       }
     };
-
     fetchData(); // Call the function to fetch data
   }, []); // Dependency array ensures this runs only on mount
 
   return (
     <Box m="20px">
-      <Header title="Total Users" subtitle="Managing the Users" />
+      <Header title="Dues Management" subtitle="Send Payment Reminders" />
 
       {loading ? (
         <Typography>Loading...</Typography>
@@ -62,8 +66,15 @@ const RequestPayment = () => {
         <TableContainer component={Paper} sx={{ marginTop: "30px", overflowX: "auto" }}>
           <Table>
             <TableHead>
-              <TableRow>
-
+              <TableRow
+                sx={{
+                  backgroundColor: "secondary.main",
+                  "& th": {
+                    color: "white",
+                    fontWeight: "bold",
+                  },
+                }}
+              >
                 <TableCell>Name</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Email</TableCell>
@@ -82,22 +93,34 @@ const RequestPayment = () => {
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.phone}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell>{new Date(user.joiningDate).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric"
-                  })}</TableCell>
+                  <TableCell>
+                    {user.joiningDate !== "N/A"
+                      ? new Date(user.joiningDate).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })
+                      : "N/A"}
+                  </TableCell>
                   <TableCell>{user.duesMonth}</TableCell>
                   <TableCell>{user.duesYear}</TableCell>
                   <TableCell>{user.duesAmount}</TableCell>
-                  <TableCell>{new Date(user.paymentDate).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric"
-                  })}</TableCell>
+                  <TableCell>
+                    {user.paymentDate !== "N/A"
+                      ? new Date(user.paymentDate).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })
+                      : "N/A"}
+                  </TableCell>
                   <TableCell>{user.paymentStatus}</TableCell>
                   <TableCell>
-                    <Button color="secondary" variant="contained" onClick={() => sendMail(user.id)}>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={() => sendMail(user.id, user.ammount, user.email)}
+                    >
                       Send Reminder
                     </Button>
                   </TableCell>

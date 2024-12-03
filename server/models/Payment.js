@@ -10,10 +10,7 @@ const paymentSchema = mongoose.Schema({
         type: Number,
         require: true,
     },
-    collector: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Admin",
-    },
+  
     paymentAmmount: {
         type: Number,
         require: true,
