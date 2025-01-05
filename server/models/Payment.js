@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Comment = require("../models/Comment")
 
 const paymentSchema = mongoose.Schema({
 
@@ -39,6 +40,10 @@ const paymentSchema = mongoose.Schema({
         type: String,
         enum: ["Approved", "Deny", "Paid", "Pending"],
         required: true,
+    },
+    comment: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
     },
 
 });

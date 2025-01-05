@@ -54,6 +54,7 @@ const EditUser = () => {
 
   useEffect(() => {
     fetchUser();
+    
   }, []);
 
   return (

@@ -83,9 +83,6 @@ exports.getAllUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const userData = req.body;
-    console.log(userData)
-
-
     // Find the admin document and get the userDetails reference
     const admin = await Details.findOne({ _id: userData._id });
     if (!admin) {
