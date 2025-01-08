@@ -6,7 +6,7 @@ const { userRegTemplate } = require("../mail/templates/userReg");
 exports.sendReminder = async (req, res) => {
     try {
         const { userId, ammount, email } = req.body;
-        console.log(req.body)
+       
         if (!userId) {
             return res.status(400).json({
                 message: "Fill all required fields",
@@ -51,15 +51,11 @@ exports.sendReminder = async (req, res) => {
             paymentDate: Date.now(),
             ammountPaid: 0, // Initialize with 0 or your preferred initial value
             duesAmmount: ammount + totalAmountDue, // Add the current payment amount to the total dues
-            
             status: 'Pending',
             createdAt: Date.now(),
         });
 
         // Send email notification
-
-
-
         const title = 'Welcome to the Platform!';
         const body = userRegTemplate(email, totalAmountDue);
         await mailSender(email, title, body);
@@ -115,7 +111,7 @@ exports.requestPayment = async (req, res) => {
             },
             {
                 $project: {
-                    _id: 0, // Exclude `_id` from the final output
+                    paymentId: "$latestPayment._id", // Exclude `_id` from the final output
                     userId: "$_id", // Rename `_id` to `userId`
                     duesMonth: "$latestPayment.duesMonth",
                     duesYear: "$latestPayment.duesYear",
@@ -135,7 +131,8 @@ exports.requestPayment = async (req, res) => {
                 duesAmount: item.duesAmount,
                 amountPaid: item.amountPaid,
                 status: item.status,
-                paymentDate: item.paymentDate
+                paymentDate: item.paymentDate,
+                paymentId : item.paymentId
             };
             return acc;
         }, {});

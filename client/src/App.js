@@ -21,6 +21,7 @@ import AllMeal from "./scenes/meal/allMeal";
 import TodayMeal from "./scenes/meal/todayMeal";
 
 import RequestPayment from "./scenes/payment/sendReminer";
+import ApproveUserPayment from "./scenes/payment/ApproveUserPayment";
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
@@ -63,7 +64,8 @@ function App() {
                 <Route path="/allMeal" element={isAuthenticated ? <AllMeal /> : <Navigate to="/login" />} />
                 <Route path="/todayMeal" element={isAuthenticated ? <TodayMeal /> : <Navigate to="/login" />} />
                 <Route path="/requestPayment" element={isAuthenticated ? <RequestPayment /> : <Navigate to="/login" />} />
-           
+                <Route path="/approveUserPayment" element={isAuthenticated ? <ApproveUserPayment /> : <Navigate to="/login" />} />
+
                 <Route path="/login" element={<Login onLogin={handleLogin} />} />
                 <Route path="/*" element={<Error />} />
               </Routes>

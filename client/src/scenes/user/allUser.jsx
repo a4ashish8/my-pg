@@ -5,7 +5,7 @@ import {
 } from "@mui/material";
 import Header from "../../components/Header";
 import { useEffect, useState } from "react";
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getAllUsers, statusUpdate } from "../../services/opertions/user";
 import { getAllUserExcel } from "../../services/opertions/excel";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -61,8 +61,6 @@ const AllUser = () => {
       console.error("Failed to update status", error);
     }
   };
-
-
 
   return (
     <Box m="20px">

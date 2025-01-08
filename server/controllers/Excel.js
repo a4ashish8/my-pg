@@ -32,7 +32,7 @@ exports.downloadAlluser = async (req, res) => {
         amount: user.userDetails.ammount,
         joiningDate: user.userDetails.joiningDate,
         image: user.userDetails.Image,
-        userType: user.userType,
+        userType: user.userType == 'Users' ? 'User' : 'Admin',
         userStatus: user.userStatus,
       });
     });
