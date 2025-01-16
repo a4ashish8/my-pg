@@ -1,0 +1,46 @@
+services:
+  # Backend service
+  - name: my-pg-backend
+    type: web
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run dev
+    rootDir: server
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: DATABASE_URL
+        value: mongodb+srv://ashishranjannadda:2Tjc0D0UyUDtA2P8@my-pg.wha6p.mongodb.net/my-pg?retryWrites=true&w=majority
+      - key: JWT_SECRET
+        value: my-secret-key
+      - key: CLOUD_NAME
+        value: dufp3vzeu
+      - key: API_KEY
+        value: 455737465239587
+      - key: API_SECRET
+        value: uEfOHwFbp5sXw-wbxxqb6C2amrc
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      - key: MAIL_USER
+        value: ashish.ranjan.nadda@gmail.com
+      - key: MAIL_PASS
+        value: mvyeiidvgmntnyxx
+      - key: FOLDER_NAME
+        value: uploadTest
+      - key: RAZORPAY_SECRET
+        value: RAZORPAY_SECRET
+      - key: RAZORPAY_ID
+        value: RAZORPAY_SECRET
+    autoDeploy: true
+
+  # Frontend service
+  - name: my-pg-frontend
+    type: static
+    plan: free
+    buildCommand: npm run build
+    publishPath: build
+    rootDir: client
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://my-pg-backend.onrender.com
