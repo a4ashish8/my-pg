@@ -5,8 +5,8 @@ const { userRegTemplate } = require("../mail/templates/userReg");
 
 exports.sendReminder = async (req, res) => {
     try {
-        const { userId, ammount, email } = req.body;
-       
+        const { userId,ammount, email } = req.body;
+
         if (!userId) {
             return res.status(400).json({
                 message: "Fill all required fields",
@@ -18,46 +18,57 @@ exports.sendReminder = async (req, res) => {
         const now = new Date();
         const duesYear = now.getFullYear();
         const duesMonth = now.getMonth() + 1;
+         
 
         const existingReminder = await Payment.findOne({ userId, duesYear, duesMonth });
-
-        const userDetails = await Admin.findOne({ _id: userId }).populate("userDetails");
-        const checkPayment = await Payment.find({ userId: userId }).sort({ createdAt: -1 }).limit(1);
-        let totalAmountDue = 0;
-
-        if (checkPayment.length > 0) {
-            totalAmountDue = checkPayment[0].duesAmmount || 0;
-
-        }
+// this is used for send duplicate reminder mail
 
         if (existingReminder) {
             // Send email notification
             const title = 'Welcome to the Platform!';
-            const body = userRegTemplate(email, totalAmountDue);
-            await mailSender(email, title, body);
+            const body = userRegTemplate(email, existingReminder.duesAmmount);
+            //await mailSender(email, title, body);
 
             return res.status(200).json({
                 message: "Reminder already sent. Email notification triggered.",
                 success: true,
+                existingReminder
             });
         }
 
+
+
+        const userDetail = await Admin.findOne({ _id: userId }).populate("userDetails");
+        const checkPayment = await Payment.find({ userId: userId }).sort({ createdAt: -1 }).limit(1);
+
+   
+        let preAmmount = 0;
+        let currentAmmount = 0;
+
+        if (checkPayment.length > 0) {
+            preAmmount = checkPayment[0].duesAmmount || 0;
+        }
+        if (userDetail) {
+            currentAmmount = userDetail.userDetails.ammount;
+        }
+       const totalAmmount = preAmmount + currentAmmount;
+       
         // Create a new payment reminder
         const newReminder = await Payment.create({
             duesMonth,
             duesYear,
-            paymentAmmount :ammount,
+            paymentAmmount: totalAmmount,
             userId,
             paymentDate: Date.now(),
             ammountPaid: 0, // Initialize with 0 or your preferred initial value
-            duesAmmount: ammount + totalAmountDue, // Add the current payment amount to the total dues
+            duesAmmount: totalAmmount, // Add the current payment amount to the total dues
             status: 'Pending',
             createdAt: Date.now(),
         });
 
         // Send email notification
         const title = 'Welcome to the Platform!';
-        const body = userRegTemplate(email, totalAmountDue);
+        const body = userRegTemplate(email, totalAmmount);
         await mailSender(email, title, body);
 
 
@@ -66,7 +77,7 @@ exports.sendReminder = async (req, res) => {
             success: true,
             newReminder,
         });
-
+       
     } catch (error) {
         console.error('Error in sendReminder:', error);
         return res.status(500).json({
@@ -90,9 +101,12 @@ exports.sendPayment = async (req, res) => {
     }
 }
 
+
+
 exports.requestPayment = async (req, res) => {
     try {
         // MongoDB query
+        
         const userDetails = await Admin.find({
             userType: { $ne: 'Admin' }, // Exclude Admin users
             userStatus: { $eq: 'Active' }, // Only Active users
@@ -115,28 +129,30 @@ exports.requestPayment = async (req, res) => {
                     userId: "$_id", // Rename `_id` to `userId`
                     duesMonth: "$latestPayment.duesMonth",
                     duesYear: "$latestPayment.duesYear",
-                    duesAmount: "$latestPayment.duesAmount",
+                    duesAmmount: "$latestPayment.duesAmmount",
                     amountPaid: "$latestPayment.amountPaid",
                     status: "$latestPayment.status",
-                    paymentDate: "$latestPayment.paymentDate"
+                    paymentDate: "$latestPayment.paymentDate",
+                    comment: "$latestPayment.comment",
                 }
             }
         ]);
 
+
         // Transform the result into the desired object structure
-        const userDues = transformedUserDues.reduce((acc, item) => {
-            acc[item.userId] = {
+        const userDues = transformedUserDues.reduce((acc, item) => {            
+                acc[item.userId] = {                
                 duesMonth: item.duesMonth,
                 duesYear: item.duesYear,
-                duesAmount: item.duesAmount,
+                duesAmmount: item.duesAmmount,
                 amountPaid: item.amountPaid,
                 status: item.status,
                 paymentDate: item.paymentDate,
-                paymentId : item.paymentId
+                paymentId: item.paymentId,
+                comment:item.comment,
             };
             return acc;
         }, {});
-
 
         return res.status(200).json({
             success: true,
@@ -145,7 +161,32 @@ exports.requestPayment = async (req, res) => {
             userDetails,
         });
 
+    } catch (error) {
+        console.error('Error in payment:', error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+}
 
+exports.updateStatus = async (req, res) => {
+    try {
+
+        const { id } = req.query;
+        const { status, comment } = req.body;
+        // Create a new payment reminder
+        const newReminder = await Payment.findOneAndUpdate(
+
+            { _id: id },
+            { $set: { comment, status } },
+            { new: true } // This will return the updated document
+        );
+        return res.status(200).json({
+            success: true,
+            message: "Status Updated",
+            newReminder,
+        });
     } catch (error) {
         console.error('Error in payment:', error);
         return res.status(500).json({

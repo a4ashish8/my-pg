@@ -42,8 +42,8 @@ const paymentSchema = mongoose.Schema({
         required: true,
     },
     comment: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
+        type: String,
+                // ref: "Comment",
     },
 
 });
