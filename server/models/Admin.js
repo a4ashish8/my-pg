@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const mailSender = require("../utils/mailSender");
-const { userRegTemplate } = require("../mail/templates/userReg");
+const { sendUserCredentials } = require("../mail/templates/userReg");
 
 const adminSchema = new mongoose.Schema({
     userId: {
@@ -36,9 +36,9 @@ adminSchema.post('save', async function (doc) {
             return;
         }
         const email = doc.userDetails.emailId;
+        const name = doc.userDetails.first_name + " " + doc.userDetails.last_name;
         const title = 'Welcome to the Platform!';
-        const body  = userRegTemplate(email, doc.userId);
-        
+        const body = sendUserCredentials(email, this.get('password'), 'http://localhost:3000', name);
         await mailSender(email, title, body);
     } catch (error) {
         console.error("Error in post-save hook:", error);
