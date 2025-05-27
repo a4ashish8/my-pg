@@ -41,10 +41,6 @@ const paymentSchema = mongoose.Schema({
         enum: ["Approved", "Deny", "Paid", "Pending"],
         required: true,
     },
-    comment: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-    },
 
 });
 module.exports = mongoose.model("Payment", paymentSchema)

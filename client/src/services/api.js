@@ -28,6 +28,8 @@ export const paymentendpoints = {
   REQUESTPAYMENT_API: `${BASE_URL}/payment/requestPayment`,
   REMINDER_API: `${BASE_URL}/payment/sendReminder`,
   PAYMENT_API: `${BASE_URL}/payment/sendPayment`,
+  PAYMENT_STATUS_API: `${BASE_URL}/payment/updateStatus`,
+
 }
 
 
