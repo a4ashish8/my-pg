@@ -1,4 +1,4 @@
-import { IconButton, Dialog, DialogTitle, DialogContent, DialogActions, MenuItem, Select, FormControl, InputLabel, TextField, Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
+import { Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
 import Header from "../../components/Header";
 import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
@@ -27,78 +27,41 @@ const RequestPayment = () => {
 
     await sendReminder(data);
   };
-  // Save data and close dialog
-  const handleSave = async () => {
-    const param = {
-       id: selectedUser.paymentId, // or simply `id` if key and value are the same
 
-    };
-    const data = {
-      status: status,
-      comment: comment
-    };
-    await updatePaymentStatus(data, param);
-
-     fetchData();
-    handleDialogClose();
-  };
 
   useEffect(() => {
-    
+    const fetchData = async () => {
+      try {
+        const data = await duesPayment(); 
+        // Call the API function
+        // Process and set user data
+        const formattedUsers = data.userDetails.map((user) => {
+          const dues = data.userDues[user._id] || {}; // Get dues for the user ID or default to an empty object
+
+          return {
+            id: user._id,
+            name: `${user.userDetails.first_name} ${user.userDetails.last_name}` || "N/A",
+            phone: user.userDetails.phoneNo || "N/A",
+            email: user.userDetails.emailId || "N/A",
+            ammount: user.userDetails.ammount || 0,
+            joiningDate: user.userDetails.joiningDate || "N/A",
+            duesMonth: dues.duesMonth || "N/A",
+            duesYear: dues.duesYear || "N/A",
+            duesAmount: dues.duesAmount || 0,
+            paymentDate: dues.paymentDate || "N/A",
+            paymentStatus: dues.status || "Not Done",
+          };
+        });
+
+        setUsers(formattedUsers); // Update state with formatted data
+        setLoading(false); // Set loading to false
+      } catch (error) {
+        console.error("Error fetching payment data:", error); // Log errors
+        setLoading(false); // Stop loading even on error
+      }
+    };
     fetchData(); // Call the function to fetch data
   }, []); // Dependency array ensures this runs only on mount
-
-  const monthArray = {1:'Jan',2:'Feb',3:'Mar',4:'Apr',5:'May',6:'Jun',7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'};
-  const fetchData = async () => {
-    try {
-      const data = await duesPayment();
-      // Call the API function
-      // Process and set user data
-      
-      const formattedUsers = data.userDetails.map((user) => {
-        const dues = data.userDues[user._id] || {}; // Get dues for the user ID or default to an empty object
-        return {
-          id: user._id,
-          name: `${user.userDetails.first_name} ${user.userDetails.last_name}` || "N/A",
-          phone: user.userDetails.phoneNo || "N/A",
-          email: user.userDetails.emailId || "N/A",
-          ammount: user.userDetails.ammount || 0,
-          joiningDate: user.userDetails.joiningDate || "N/A",
-          duesMonth: monthArray[dues.duesMonth] || "N/A",
-          duesYear: dues.duesYear || "N/A",
-          duesAmmount: dues.duesAmmount || 0,
-          paymentDate: dues.paymentDate || "N/A",
-          paymentStatus: dues.status || "Not Done",
-          paymentId: dues.paymentId,
-          paymentComment: dues.comment || '',
-
-        };
-      });
-
-      setUsers(formattedUsers); // Update state with formatted data
-      setLoading(false); // Set loading to false
-    } catch (error) {
-      console.error("Error fetching payment data:", error); // Log errors
-      setLoading(false); // Stop loading even on error
-    }
-  };
-  // Handle dialog open with user data
-  const handleDialogOpen = (user) => {
-    setSelectedUser(user);
-    setStatus(user.paymentStatus || "");
-    setComment(user.paymentComment || '');
-    setDialogOpen(true);
-  };
-
-  // Handle dialog close
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-    setSelectedUser(null);
-    setComment("");
-    setStatus("");
-  };
-
-
 
   return (
     <Box m="20px">
@@ -162,11 +125,6 @@ const RequestPayment = () => {
                   </TableCell>
                   <TableCell>{user.paymentStatus}</TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleDialogOpen(user)}>
-                      <EditIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell>
                     <Button
                       color="secondary"
                       variant="contained"
@@ -181,45 +139,6 @@ const RequestPayment = () => {
           </Table>
         </TableContainer>
       )}
-
-
-      <Dialog open={dialogOpen} onClose={handleDialogClose}>
-        <DialogTitle>Approve Payment || Comment</DialogTitle>
-        <DialogContent>
-          {selectedUser && (
-            <>
-              <Typography>Name: {selectedUser.name}</Typography>
-              <FormControl fullWidth margin="dense">
-                <InputLabel>Status</InputLabel>
-                <Select value={status} onChange={(e) => setStatus(e.target.value)}>
-                  <MenuItem value="Approved">Approved</MenuItem>
-                  <MenuItem value="Deny">Declined </MenuItem>
-                  <MenuItem value="Paid">Paid </MenuItem>
-                  <MenuItem value="Pending">Pending </MenuItem>
-
-                </Select>
-              </FormControl>
-              <TextField
-                fullWidth
-                margin="dense"
-                label="Comment"
-                multiline
-                rows={4}
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
-            </>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handleSave} color="primary" variant="contained">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 

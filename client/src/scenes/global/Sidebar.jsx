@@ -55,9 +55,6 @@ const CustomSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
 
-  const Role = userData?.user?.userType;
-  const userId = userData?.user?._id;
-
   return (
     <Box
       sx={{
@@ -114,10 +111,12 @@ const CustomSidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  {`${userData?.user?.userDetails?.first_name ?? "User"} ${userData?.user?.userDetails?.last_name ?? "Name"}`}
+                  {`${userData?.user?.userDetails?.first_name ?? "User"} ${
+                    userData?.user?.userDetails?.last_name ?? "Name"
+                  }`}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                  {Role || "Role"}
+                  {userData?.user?.userType || "Role"} {/* Fallback role */}
                 </Typography>
               </Box>
             </Box>
@@ -130,37 +129,83 @@ const CustomSidebar = () => {
             <Typography variant="h6" color={colors.grey[300]} sx={{ m: "15px 0 5px 20px" }}>
               Users
             </Typography>
-            {Role === 'Admin' ? (
-              <>
-                <Item title="Total Users" to="/totalUsers" icon={icons["Total Users"]} selected={selected} setSelected={setSelected} />
-                <Item title="Create User" to="/userReg" icon={icons["Create User"]} selected={selected} setSelected={setSelected} />
-              </>
-            ) : (
-              <Item title="Update User" to={`/UpdateUser?id=${userId}`} icon={icons["Update User"]} selected={selected} setSelected={setSelected} />
-            )}
+            <Item
+              title="Total Users"
+              to="/totalUsers"
+              icon={icons["Total Users"]}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Create User"
+              to="/userReg"
+              icon={icons["Create User"]}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Update User"
+              to="/UpdateUser"
+              icon={icons["Update User"]}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
             {/* Payment */}
             <Typography variant="h6" color={colors.grey[300]} sx={{ m: "15px 0 5px 20px" }}>
               Payment
             </Typography>
-            {Role === 'Admin' ? (
-              <Item title="Send Reminder" to="/requestPayment" icon={icons["Send Reminder"]} selected={selected} setSelected={setSelected} />
-            ) : (
-              <Item title="All payment" to="/totalPayment" icon={icons["All payment"]} selected={selected} setSelected={setSelected} />
-            )}
+            <Item
+              title="Send Reminder"
+              to="/requestPayment"
+              icon={icons["Send Reminder"]}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Approve Payment"
+              to="/approvePayment"
+              icon={icons["Approve Payment"]}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="All payment"
+              to="/totalPayment"
+              icon={icons["All payment"]}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
-            {/* Meal */}
-            <Typography variant="h6" color={colors.grey[300]} sx={{ m: "15px 0 5px 20px" }}>
+            {/* Meal Section */}
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 20px" }}
+            >
               Meal
             </Typography>
-            {Role === 'Admin' ? (
-              <>
-                <Item title="All Meal" to="/allMeal" icon={icons["All Meal"]} selected={selected} setSelected={setSelected} />
-                <Item title="Save Meal" to="/saveMeal" icon={icons["Save Meal"]} selected={selected} setSelected={setSelected} />
-              </>
-            ) : (
-              <Item title="Today Meal" to="/todayMeal" icon={icons["Today Meal"]} selected={selected} setSelected={setSelected} />
-            )}
+            <Item
+              title="Save Meal"
+              to="/saveMeal"
+              icon={icons["Save Meal"]}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="All Meal"
+              to="/allMeal"
+              icon={icons["All Meal"]}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Today Meal"
+              to="/todayMeal"
+              icon={icons["Today Meal"]}
+              selected={selected}
+              setSelected={setSelected}
+            />
           </Box>
         </Menu>
       </Sidebar>
