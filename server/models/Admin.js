@@ -31,14 +31,18 @@ const adminSchema = new mongoose.Schema({
 adminSchema.post('save', async function (doc) {
     try {
         await doc.populate('userDetails');
+
         if (!doc.userDetails || !doc.userDetails.emailId) {
             console.error("User details or email not found.");
             return;
         }
+
         const email = doc.userDetails.emailId;
-        const name = doc.userDetails.first_name + " " + doc.userDetails.last_name;
+        const name = `${doc.userDetails.first_name} ${doc.userDetails.last_name}`;
+        const plainPassword = doc._plainPassword; // Get the temporary password field
+
         const title = 'Welcome to the Platform!';
-        const body = sendUserCredentials(email, this.get('password'), 'http://localhost:3000', name);
+        const body = sendUserCredentials(email, plainPassword, 'http://localhost:3000', name);
         await mailSender(email, title, body);
     } catch (error) {
         console.error("Error in post-save hook:", error);
