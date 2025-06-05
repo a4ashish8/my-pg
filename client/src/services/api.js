@@ -1,4 +1,4 @@
-const BASE_URL = "https://my-pg-sg98.onrender.com//api/v1"
+const BASE_URL = "https://my-pg-sg98.onrender.com/api/v1"
 
 
 // USER ENDPOINTS
