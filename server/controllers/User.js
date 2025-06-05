@@ -5,32 +5,39 @@ require("dotenv").config()
 const jwt = require("jsonwebtoken");
 // Signup Controller for Registering USers
 
+
 exports.addUser = async (req, res) => {
   try {
-    // Destructure fields from the request body
-    const { first_name, last_name, emailId, password, userType, phoneNo, userStatus, ammount, joiningDate } = req.body
-    // Check if All Details are there or not
+    const {
+      first_name,
+      last_name,
+      emailId,
+      password,
+      userType,
+      phoneNo,
+      userStatus,
+      ammount,
+      joiningDate
+    } = req.body;
+
     if (!first_name || !last_name || !emailId || !password) {
       return res.status(403).send({
         success: false,
         message: "All Fields are required",
-      })
+      });
     }
 
-
-    // Check if user already exists
-    const existingUser = await Details.findOne({ emailId })
+    const existingUser = await Details.findOne({ emailId });
     if (existingUser) {
       return res.status(400).json({
         success: false,
         message: "User already exists. Please sign in to continue.",
-      })
+      });
     }
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10)
+
+    const hashedPassword = await bcrypt.hash(password, 10);
     const imageUrl = `https://api.dicebear.com/5.x/initials/svg?seed=${first_name}%20${last_name}`;
 
-    // Create the Additional Profile For User
     const details = await Details.create({
       first_name,
       last_name,
@@ -39,28 +46,35 @@ exports.addUser = async (req, res) => {
       emailId,
       joiningDate,
       Image: imageUrl,
-    })
-    const user = await Admin.create({
+    });
+
+    const user = new Admin({
       userId: emailId,
       password: hashedPassword,
       userType,
       userStatus,
       userDetails: details._id,
-    })
+    });
+
+    // Attach plain password temporarily for email use
+    user._plainPassword = password;
+
+    await user.save();
 
     return res.status(200).json({
       success: true,
       user,
       message: "User registered successfully",
-    })
+    });
+
   } catch (error) {
-    console.error(error)
+    console.error(error);
     return res.status(500).json({
       success: false,
       message: "User cannot be registered. Please try again.",
-    })
+    });
   }
-}
+};
 
 exports.getAllUser = async (req, res) => {
   try {
