@@ -28,11 +28,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
 	cors({
-		origin:"https://my-pg.netlify.app/",
-		// origin:"http://localhost:3000",
-		credentials:true,
+	  origin: ["https://my-pg.netlify.app", "http://localhost:3000"],
+	  credentials: true,
 	})
-)
+  );
+  
 
 app.use(
 	fileUpload({
