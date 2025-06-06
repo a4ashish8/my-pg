@@ -10,5 +10,6 @@ export const apiConnector = (method, url, bodyData = null, headers = null, param
     headers,
     params,
     responseType, // Pass responseType to ensure Axios treats it as a Blob
+    withCredentials: true,
   });
 };
