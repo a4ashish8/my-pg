@@ -1,7 +1,6 @@
 import { Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
 import Header from "../../components/Header";
 import { useEffect, useState } from "react";
-import EditIcon from "@mui/icons-material/Edit";
 
 // import { useNavigate } from "react-router-dom";
 import { duesPayment, sendReminder, updatePaymentStatus } from "../../services/opertions/payment";
@@ -141,15 +140,6 @@ const RequestPayment = () => {
       )}
     </Box>
   );
-
-
-
-
-
-
-
-
-
 };
 
 export default RequestPayment;
