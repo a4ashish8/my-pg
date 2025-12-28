@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:8000/api/v1"
+// const BASE_URL = "http://localhost:8000/api/v1"
+const BASE_URL = "http://http://13.62.100.172/:8000/api/v1"
 
 
 // USER ENDPOINTS
