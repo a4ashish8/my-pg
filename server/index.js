@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
 	cors({
-	  origin: ["https://my-pg.netlify.app", "http://localhost:3000", "http://http://13.62.100.172/:3000"],
+	  origin: ["https://my-pg.netlify.app", "http://localhost:3000", "http://http://13.62.100.172:3000"],
 	  credentials: true,
 	})
   );
